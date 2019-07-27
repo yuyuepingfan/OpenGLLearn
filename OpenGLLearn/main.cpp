@@ -1,11 +1,12 @@
 #include "OpenGLLearn.h"
 #include <QtWidgets/QApplication>
-#include <GL/glew.h>
+#include "include/core/Widget.h"
+
 
 int main(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
-	OpenGLLearn w;
-	w.show();
-	return a.exec();
+	Widget w(1800, 800);
+	w.realise();
+
+	return -1;
 }
