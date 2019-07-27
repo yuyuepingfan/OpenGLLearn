@@ -28,6 +28,12 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{09b1b0a0-bd98-44ea-a563-97d000e26d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{ed077e7d-7764-43dd-a64f-ecd8f4461261}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,10 +42,16 @@
     <ClCompile Include="OpenGLLearn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Widget.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="OpenGLLearn.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\core\Widget.h">
+      <Filter>Header Files\core</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #include "OpenGLLearn.h"
 #include <QtWidgets/QApplication>
+#include <GL/glew.h>
 
 int main(int argc, char *argv[])
 {
