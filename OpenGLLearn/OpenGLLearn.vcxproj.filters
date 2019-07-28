@@ -45,6 +45,12 @@
     <ClCompile Include="src\core\Widget.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Shader.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Program.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="OpenGLLearn.h">
@@ -52,6 +58,12 @@
     </QtMoc>
     <QtMoc Include="include\core\Widget.h">
       <Filter>Header Files\core</Filter>
+    </QtMoc>
+    <QtMoc Include="include\core\Shader.h">
+      <Filter>Header Files\core</Filter>
+    </QtMoc>
+    <QtMoc Include="include\core\Program.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

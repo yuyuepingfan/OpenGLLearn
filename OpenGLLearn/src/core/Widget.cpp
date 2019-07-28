@@ -2,7 +2,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-
+#include "Shader.h"
+#include "Program.h"
 
 char * vglsl =
 "#version 330 core\n"\
@@ -88,57 +89,12 @@ void Widget::realise()
 	unsigned int EBO;
 	glGenBuffers(1, &EBO);
 
-
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vglsl, NULL);
-	glCompileShader(vertexShader);
-
-	int sucess;
-	char infoLog[512] = { 0 };
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &sucess);
-	if (!sucess)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "Error::Shader::Vertex::Compilation_Failed" << infoLog << std::endl;
-	}
-
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragGlsl, NULL);
-	glCompileShader(fragmentShader);
-
-	sucess = 0;
-	memset(infoLog, 0, sizeof(infoLog));
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &sucess);
-
-	if (!sucess)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "Error:Shader::Frag::Compilation_Failed" << infoLog << std::endl;
-	}
-
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	sucess = 0;
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &sucess);
-	if (!sucess)
-	{
-		memset(infoLog, 0, sizeof(infoLog));
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		return;
-	}
-
-	glUseProgram(shaderProgram);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-	glUseProgram(0);
-
-
+	Shader vs(vglsl, Shader::SrcType::Src, Shader::Type::Vertex);
+	Shader fs(fragGlsl, Shader::SrcType::Src, Shader::Type::Frag);
+	Program program;
+	program.AttachShader(&vs, &fs);
+	Program program2;
+	program2.AttachShader(&vs, &fs);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexs), indexs, GL_STATIC_DRAW);
@@ -147,19 +103,17 @@ void Widget::realise()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, \
 		3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glUseProgram(shaderProgram);
-
 	glBindVertexArray(0);
-	//glUseProgram(0);
 	
-
-
 	while (!glfwWindowShouldClose(_window))
 	{
 		processEvent(_window);
 		glBindVertexArray(VAO);
-		glUseProgram(shaderProgram);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		program.UseProgram();
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(3 * sizeof(unsigned int)));
+		processEvent(_window);
+		program2.UseProgram();
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		glfwSwapBuffers(_window);
 		glfwPollEvents();
