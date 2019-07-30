@@ -6,7 +6,12 @@
 #include "Program.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
+#include <glm/glm.hpp>
+#include <glm/geometric.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "FPManipulator.h"
 //char * vglsl =
 //"#version 330 core\n"\
 //"layout (location = 0) in vec3 aPos;\n"\
@@ -20,11 +25,14 @@ char * vglsl =
 "layout (location = 0) in vec3 aPos;\n"\
 "layout (location = 1) in vec3 aColor;\n"\
 "layout (location = 2) in vec2 aTexCoord;\n"\
+"uniform mat4 model;\n"\
+"uniform mat4 view;\n"\
+"uniform mat4 projection;\n"\
 "out vec3 ourColor;\n"\
 "out vec2 TexCoord;\n"\
 "void main()\n"\
 "{\n"\
-"	gl_Position = vec4(aPos, 1.0);\n"\
+"	gl_Position = projection * view * model * vec4(aPos, 1.0);\n"\
 "	ourColor = aColor;\n"\
 "	TexCoord = aTexCoord;\n"\
 "}\n";
@@ -49,10 +57,11 @@ char * fragGlsl =
 //"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 //"}\n";
 
-
+//glm::mat4 projection;
 void framwbuffer_size_callback(GLFWwindow * window, int w, int h)
 {
 	glViewport(0, 0, w, h);
+	//projection = glm::perspective(glm::radians(45.0f), float(w) / float(h), -3.f, 100.f);
 }
 
 
@@ -96,7 +105,14 @@ Widget::~Widget()
 
 void Widget::realise()
 {
-
+	FPManipulator * fp = new FPManipulator(nullptr);
+	double startTM = glfwGetTime();
+	
+	glm::mat4 view;
+	view = glm::lookAt(glm::vec3(0.0f, 0.0f, 10.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 projection(1.0f);
 
 	float vertices[] = { \
 		-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f,\
@@ -169,13 +185,44 @@ void Widget::realise()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	while (!glfwWindowShouldClose(_window))
 	{
+		/*glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CCW);*/
+		
+		//fp->getView();
+		/*double endTM = glfwGetTime();
+		double parma = endTM - startTM;*/
+		glm::mat4 model(1.0f);
+		//model = glm::translate(model, glm::vec3(glm::sin(parma), 0, 0));
+		//view = glm::lookAt(glm::vec3(0, 0.0f, /*3.0f + 7.0f * glm::abs(glm::sin(parma)*/10.0f),
+		//	glm::vec3(0.0f, 0.0f, 0.0f),
+		//	glm::vec3(0.0f, 1.0f, 0.0f));
+		fp->processEvent(_window);
+		view = fp->getView();
+		projection = glm::perspective(glm::radians(45.0f), float(1800) / float(800), 3.f, 10.f);
 		processEvent(_window);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
 		program.UseProgram();
+		int modelIndex = glGetUniformLocation(program.getIndex(), "model");
+		int projectionIndex = glGetUniformLocation(program.getIndex(), "projection");
+		int viewIndex = glGetUniformLocation(program.getIndex(), "view");
+
+		glUniformMatrix4fv(modelIndex, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(projectionIndex, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(viewIndex, 1, GL_FALSE, glm::value_ptr(view));
+		
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(3 * sizeof(unsigned int)));
 //		processEvent(_window);
 		program2.UseProgram();
+		int modelIndex2 = glGetUniformLocation(program2.getIndex(), "model");
+		int projectionIndex2 = glGetUniformLocation(program2.getIndex(), "projection");
+		int viewIndex2 = glGetUniformLocation(program2.getIndex(), "view");
+
+		glUniformMatrix4fv(modelIndex2, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(projectionIndex2, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(viewIndex2, 1, GL_FALSE, glm::value_ptr(view));
+
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		glfwSwapBuffers(_window);
@@ -187,5 +234,6 @@ void Widget::processEvent(GLFWwindow * w)
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+	
 }
 

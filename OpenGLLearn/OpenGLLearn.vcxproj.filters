@@ -51,6 +51,15 @@
     <ClCompile Include="src\core\Program.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Manipulator.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\FPManipulator.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="OpenGLLearn.h">
@@ -62,7 +71,16 @@
     <QtMoc Include="include\core\Shader.h">
       <Filter>Header Files\core</Filter>
     </QtMoc>
+    <QtMoc Include="include\core\Camera.h">
+      <Filter>Header Files\core</Filter>
+    </QtMoc>
     <QtMoc Include="include\core\Program.h">
+      <Filter>Header Files\core</Filter>
+    </QtMoc>
+    <QtMoc Include="include\core\Manipulator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="include\core\FPManipulator.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

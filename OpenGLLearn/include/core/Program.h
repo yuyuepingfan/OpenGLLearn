@@ -13,7 +13,7 @@ public:
 	~Program();
 	void AttachShader(Shader * vshader, Shader * fshader);
 	void UseProgram();
-
+	GLuint getIndex() { return _index; }
 
 private:
 	GLuint _index;
